@@ -8,6 +8,7 @@ import org.assignment.sunbasedataassignment.repository.CustomerRepository;
 import org.assignment.sunbasedataassignment.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -123,6 +126,7 @@ public class CustomerServiceImpl implements CustomerService {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> responseEntity = restTemplate.exchange(customerApiUrl, HttpMethod.GET, entity, String.class);
             HttpStatus statusCode = (HttpStatus) responseEntity.getStatusCode();
+            ResponseEntity<List> list= restTemplate.exchange(customerApiUrl, HttpMethod.GET, entity, List.class);
             if (statusCode == HttpStatus.OK) {
                 String response = responseEntity.getBody();
                 return response;
@@ -137,49 +141,50 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void saveSunbaseCustomer() throws JsonProcessingException {
+    public void saveSunbaseCustomer()  {
         String response = synSunbaseCustomer();
         ObjectMapper objectMapper = new ObjectMapper();
+        try {
         JsonNode jsonNode = objectMapper.readTree(response);
-        for (JsonNode customerNode : jsonNode) {
-            String uuid = customerNode.get("uuid").asText();
-            String firstName = customerNode.get("first_name").asText();
-            String lastName = customerNode.get("last_name").asText();
-            String street = customerNode.get("street").asText();
-            String address = customerNode.get("address").asText();
-            String city = customerNode.get("city").asText();
-            String state = customerNode.get("state").asText();
-            String email = customerNode.get("email").asText();
-            String phone = customerNode.get("phone").asText();
+            for (JsonNode customerNode : jsonNode) {
+                String uuid = customerNode.get("uuid").asText();
+                String firstName = customerNode.get("first_name").asText();
+                String lastName = customerNode.get("last_name").asText();
+                String street = customerNode.get("street").asText();
+                String address = customerNode.get("address").asText();
+                String city = customerNode.get("city").asText();
+                String state = customerNode.get("state").asText();
+                String email = customerNode.get("email").asText();
+                String phone = customerNode.get("phone").asText();
 
-//            Optional<Customer> existingCustomerOptional= customerRepository.findByIdAndEmail(uuid,email);
-//            List<Customer> existingCustomerByEmail = customerRepository.findByEmail(email);
-//            Optional<Customer> existingCustomerOptional = customerRepository.findById(uuid);
-            Optional<Customer> existingCustomerOptional=customerRepository.findCustomerByEmail(email);
+                Optional<Customer> existingCustomerOptional=customerRepository.findCustomerByEmail(email);
 
-            if (existingCustomerOptional.isPresent()) {
-                Customer existingCustomer = existingCustomerOptional.get();
-                existingCustomer.setFirstName(firstName);
-                existingCustomer.setLastName(lastName);
-                existingCustomer.setStreet(street);
-                existingCustomer.setAddress(address);
-                existingCustomer.setCity(city);
-                existingCustomer.setState(state);
-                existingCustomer.setPhone(phone);
-                updateCustomer(uuid, existingCustomer);
-            } else {
-                Customer newCustomer = new Customer();
-                newCustomer.setId(uuid);
-                newCustomer.setFirstName(firstName);
-                newCustomer.setLastName(lastName);
-                newCustomer.setStreet(street);
-                newCustomer.setAddress(address);
-                newCustomer.setCity(city);
-                newCustomer.setState(state);
-                newCustomer.setEmail(email);
-                newCustomer.setPhone(phone);
-                saveCustomer(newCustomer);
+                if (existingCustomerOptional.isPresent()) {
+                    Customer existingCustomer = existingCustomerOptional.get();
+                    existingCustomer.setFirstName(firstName);
+                    existingCustomer.setLastName(lastName);
+                    existingCustomer.setStreet(street);
+                    existingCustomer.setAddress(address);
+                    existingCustomer.setCity(city);
+                    existingCustomer.setState(state);
+                    existingCustomer.setPhone(phone);
+                    updateCustomer(uuid, existingCustomer);
+                } else {
+                    Customer newCustomer = new Customer();
+                    newCustomer.setId(UUID.randomUUID().toString());
+                    newCustomer.setFirstName(firstName);
+                    newCustomer.setLastName(lastName);
+                    newCustomer.setStreet(street);
+                    newCustomer.setAddress(address);
+                    newCustomer.setCity(city);
+                    newCustomer.setState(state);
+                    newCustomer.setEmail(email);
+                    newCustomer.setPhone(phone);
+                    saveCustomer(newCustomer);
+                }
             }
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
         }
 
     }

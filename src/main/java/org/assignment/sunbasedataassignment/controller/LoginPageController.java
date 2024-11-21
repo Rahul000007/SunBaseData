@@ -28,7 +28,7 @@ public class LoginPageController {
     // Method to process user login and generate a JWT token.
     // Adds the token to the response header and redirects to the customer list page.
     @PostMapping("/process-login")
-    public String processLogin(@RequestParam String username, @RequestParam String password, HttpServletResponse response) throws Exception {
+    public String processLogin(@RequestParam String username, @RequestParam String password, HttpServletResponse response) {
         String token = tokenProvider.generateToken(username, password);
         response.setHeader("Authorization", "Bearer " + token);
         return "customerList";

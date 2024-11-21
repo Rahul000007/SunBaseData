@@ -29,7 +29,7 @@ public interface CustomerService {
     List<Customer> searchCustomers(String criteria, String value);
 
     // Save sunbase customer
-    void saveSunbaseCustomer() throws JsonProcessingException;
+    void saveSunbaseCustomer();
 
 }
 

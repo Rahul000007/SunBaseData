@@ -27,12 +27,6 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
 
     List<Customer> findByCityContaining(String city);
 
-//    @Query("SELECT c FROM Customer c WHERE c.email = :email")
-//    List<Customer> findByEmail(@Param("email") String email);
-//
-//    @Query("SELECT c FROM Customer c WHERE c.id = :id AND c.email = :email")
-//    Optional<Customer> findByIdAndEmail(@Param("id") String id, @Param("email") String email);
-//
     Optional<Customer> findCustomerByEmail(String email);
 
 }

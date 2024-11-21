@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
+    private Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String[] excluded_urls = {
             "/login",
             "/process-login",
-            "signup",
+            "/signup",
             "/process-signup",
             "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/*.jsp", "/**/*.jsp"
     };
@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Check if the request should not be filtered based on the URL.
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request){
         AntPathMatcher pathMatcher = new AntPathMatcher();
         String url = request.getRequestURI();
         return Stream.of(excluded_urls).anyMatch(x -> pathMatcher.match(x, url));

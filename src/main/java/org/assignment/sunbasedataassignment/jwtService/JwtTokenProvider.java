@@ -21,14 +21,14 @@ public class JwtTokenProvider {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public String generateToken(String username, String password) throws Exception {
+    public String generateToken(String username, String password) {
 
         try {
             this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (UsernameNotFoundException e) {
-            throw new Exception("user not found");
+            throw new UsernameNotFoundException("user not found");
         } catch (BadCredentialsException e) {
-            throw new Exception("Invalid Credentials");
+            throw new BadCredentialsException("Invalid Credentials");
         }
 
         UserDetails userDetails = userDetailService.loadUserByUsername(username);

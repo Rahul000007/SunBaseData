@@ -82,7 +82,7 @@ public class CustomerController {
 
 
     @GetMapping ("/sync")
-    public ResponseEntity<?>  addSunbaseCustomer() throws JsonProcessingException {
+    public ResponseEntity<?>  addSunbaseCustomer() {
         customerService.saveSunbaseCustomer();
         return new ResponseEntity<>(new ApiResponse( true, "Sync Successfully"), HttpStatus.OK);
     }

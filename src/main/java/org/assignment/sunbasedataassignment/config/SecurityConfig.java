@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/customer/**").authenticated()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("signup").permitAll()
+                        .requestMatchers("/signup").permitAll()
                         .requestMatchers("/process-signup").permitAll()
                         .requestMatchers("/process-login").permitAll()
                         .requestMatchers("/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/*.jsp", "/**/*.jsp").permitAll()
